@@ -1,0 +1,70 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container px-5 mb-5">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bolder">
+                <span class="text-gradient d-inline">Projects</span>
+            </h1>
+        </div>
+	<div class="row gx-5 justify-content-center">
+		<div class="col-lg-11 col-xl-9 col-xxl-8">
+			<!-- Project cards go here -->
+			<!-- Project Card 1-->
+			<div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
+				<div class="card-body p-0">
+					<div class="d-flex align-items-center">
+						<div class="p-5">
+							<h2 class="fw-bolder">Dreamline</h2>
+                            <p class="text-muted">
+                                Dreamline is a group project developed with a focus on accessibility.
+                                Our challenge was to design and build a game using the Xbox Adaptive Controller,
+                                ensuring the experience could be enjoyed with alternative input methods.
+                            </p>
+                            <!-- Project Link Button -->
+                            <a class="btn btn-primary"
+                            href="https://shinypigeon.itch.io/dreamline"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                                View on Itch.io
+                            </a>
+						</div>
+                        <a href="https://shinypigeon.itch.io/dreamline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex-shrink-0">
+						<img class="img-fluid" src="{% static 'portfolio/assets/DreamLineLogo.png' %}" alt="Dreamline project logo"/>
+                        </a>
+					</div>
+				</div>
+			</div>
+			<!-- Project Card 2-->
+			<div class="card overflow-hidden shadow rounded-4 border-0">
+				<div class="card-body p-0">
+					<div class="d-flex align-items-center">
+						<div class="p-5">
+							<h2 class="fw-bolder">Project Name 2</h2>
+							<p>Coming soon. Future Games group project 2 is complete. Itch page and logos are on the way...
+                            </p>
+						</div>
+						<img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+</section>
+<!-- Call to action section-->
+<section class="py-5 bg-gradient-primary-to-secondary text-white">
+	<div class="container px-5 my-5">
+		<div class="text-center">
+			<h2 class="display-4 fw-bolder mb-4">Let's make games together.</h2>
+			<a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" href="{% url 'contact' %}">Contact me</a>
+		</div>
+	</div>
+</section>
+{% endblock %}
