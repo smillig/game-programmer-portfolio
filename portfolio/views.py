@@ -11,3 +11,6 @@ def projects(request):
 
 def resume(request):
     return render(request, "portfolio/resume.html")
+
+def rayjolt(request):
+    return render(request, "portfolio/technical.html")

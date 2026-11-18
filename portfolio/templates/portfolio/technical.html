@@ -1,0 +1,584 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+
+{% block title %}RayJolt Pool — Technical Breakdown{% endblock %}
+
+{% block content %}
+<div class="container px-5 my-5">
+
+    <!-- Back link -->
+    <div class="mb-4">
+        <a class="text-decoration-none fw-bolder" href="{% url 'projects' %}">
+            <i class="bi bi-arrow-left me-1"></i> Back to Projects
+        </a>
+    </div>
+
+    <!-- Hero Header -->
+    <section class="mb-5">
+        <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="card-body p-5">
+                <div class="row gx-5 align-items-center">
+                    <div class="col-lg-7">
+                        <div class="badge bg-gradient-primary-to-secondary text-white mb-3">
+                            <div class="text-uppercase">Custom C++20 Engine · Technical Case Study</div>
+                        </div>
+                        <h1 class="display-5 fw-bolder mb-3">
+                            <span class="text-gradient d-inline">RayJolt Pool</span>
+                        </h1>
+                        <p class="lead text-muted mb-4">
+                            A full 8-ball billiards game built from scratch in C++ without a commercial engine—combining
+                            <strong>Raylib</strong>, <strong>Jolt Physics</strong>, <strong>EnTT (ECS)</strong>,
+                            <strong>ENet (UDP)</strong>, and <strong>Dear ImGui</strong>, compiled for Desktop and WebAssembly.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a class="btn btn-primary px-4 py-2 fw-bolder"
+                               href="https://smilligames.itch.io/ray-jolt-pool"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-controller me-2"></i>Play on Itch.io
+                            </a>
+                            <!-- <a class="btn btn-outline-dark px-4 py-2 fw-bolder"
+                               href="https://github.com/smillig"
+                               target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-github me-2"></i>Source Code
+                            </a> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-5 mt-4 mt-lg-0 text-center">
+                        <img class="img-fluid rounded-4 shadow-sm"
+                             src="{% static 'portfolio/assets/RayJoltPool.png' %}"
+                             alt="RayJolt Pool Screenshot" />
+                    </div>
+                </div>
+
+                <!-- Quick Tech Stack Strip -->
+                <div class="row row-cols-2 row-cols-md-5 g-3 mt-4 pt-4 border-top">
+                    <div class="col"><div class="bg-light rounded-4 p-3 text-center small fw-bolder">C++ / CMake</div></div>
+                    <div class="col"><div class="bg-light rounded-4 p-3 text-center small fw-bolder">Jolt Physics</div></div>
+                    <div class="col"><div class="bg-light rounded-4 p-3 text-center small fw-bolder">EnTT (ECS)</div></div>
+                    <div class="col"><div class="bg-light rounded-4 p-3 text-center small fw-bolder">ENet UDP LAN</div></div>
+                    <div class="col"><div class="bg-light rounded-4 p-3 text-center small fw-bolder">WebGL / Emscripten</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Architecture Diagram Card -->
+    <section class="mb-5">
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bolder text-primary mb-2">Game Architecture</h2>
+                    <p class="text-muted mb-0">
+                        Systems communicate exclusively through the central <code>entt::registry</code>—keeping gameplay rules,
+                        physics, rendering, audio, and LAN networking cleanly decoupled.
+                    </p>
+                </div>
+
+                <div class="bg-light rounded-4 p-3 p-md-4 text-center">
+                    <svg viewBox="0 0 980 610" xmlns="http://www.w3.org/2000/svg"
+                        style="max-width: 100%; height: auto; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;"
+                        role="img" aria-label="RayJolt Pool ECS and Engine Architecture Diagram">
+                        <defs>
+                            <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#1e30f3" />
+                                <stop offset="100%" stop-color="#e21e80" />
+                            </linearGradient>
+                            <linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#141e30" />
+                                <stop offset="100%" stop-color="#243b55" />
+                            </linearGradient>
+                            <marker id="arrowDark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#495057" />
+                            </marker>
+                            <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#e21e80" />
+                            </marker>
+                            <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1e30f3" />
+                            </marker>
+                        </defs>
+
+                        <!-- TIER 1: APPLICATION ENTRY & FRAME LOOP -->
+                        <rect x="48" y="16" width="902" height="58" rx="12" fill="url(#heroGrad)" />
+                        <text x="499" y="41" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="700">
+                            BilliardsGame :: UpdateDrawFrame()  &amp;  EntityFactory
+                        </text>
+                        <text x="499" y="61" text-anchor="middle" fill="#e9ecef" font-size="12">
+                            Desktop Fixed-Step Loop  |  Emscripten WebAssembly (emscripten_set_main_loop_arg)
+                        </text>
+
+                        <!-- Connector lines: Core -> Gameplay Systems -->
+                        <line x1="154" y1="74" x2="154" y2="102" stroke="#495057" stroke-width="1.8" marker-end="url(#arrowDark)" />
+                        <line x1="384" y1="74" x2="384" y2="102" stroke="#495057" stroke-width="1.8" marker-end="url(#arrowDark)" />
+                        <line x1="614" y1="74" x2="614" y2="102" stroke="#495057" stroke-width="1.8" marker-end="url(#arrowDark)" />
+                        <line x1="844" y1="74" x2="844" y2="102" stroke="#495057" stroke-width="1.8" marker-end="url(#arrowDark)" />
+
+                        <!-- TIER 2: GAMEPLAY & SIMULATION SYSTEMS -->
+                        <!-- LogicSystem -->
+                        <rect x="48" y="106" width="212" height="72" rx="10" fill="#ffffff" stroke="#1e30f3" stroke-width="2" />
+                        <text x="154" y="132" text-anchor="middle" fill="#1e30f3" font-size="14" font-weight="700">LogicSystem</text>
+                        <text x="154" y="150" text-anchor="middle" fill="#495057" font-size="11">Drain Contact Queue, Detect Rest</text>
+                        <text x="154" y="165" text-anchor="middle" fill="#6c757d" font-size="11">&amp; Runaway Ball Fallbacks</text>
+
+                        <!-- RulesSystem -->
+                        <rect x="278" y="106" width="212" height="72" rx="10" fill="#ffffff" stroke="#1e30f3" stroke-width="2" />
+                        <text x="384" y="132" text-anchor="middle" fill="#1e30f3" font-size="14" font-weight="700">RulesSystem</text>
+                        <text x="384" y="150" text-anchor="middle" fill="#495057" font-size="11">League 8-Ball Evaluation,</text>
+                        <text x="384" y="165" text-anchor="middle" fill="#6c757d" font-size="11">Long-String Spotting &amp; Turns</text>
+
+                        <!-- AISystem -->
+                        <rect x="508" y="106" width="212" height="72" rx="10" fill="#ffffff" stroke="#1e30f3" stroke-width="2" />
+                        <text x="614" y="132" text-anchor="middle" fill="#1e30f3" font-size="14" font-weight="700">AISystem</text>
+                        <text x="614" y="150" text-anchor="middle" fill="#495057" font-size="11">Ghost-Ball Shot Geometry,</text>
+                        <text x="614" y="165" text-anchor="middle" fill="#6c757d" font-size="11">Clearance &amp; Easy/Med/Hard AI</text>
+
+                        <!-- InputSystem -->
+                        <rect x="738" y="106" width="212" height="72" rx="10" fill="#ffffff" stroke="#1e30f3" stroke-width="2" />
+                        <text x="844" y="132" text-anchor="middle" fill="#1e30f3" font-size="14" font-weight="700">InputSystem</text>
+                        <text x="844" y="150" text-anchor="middle" fill="#495057" font-size="11">Mouse, Remappable Keys,</text>
+                        <text x="844" y="165" text-anchor="middle" fill="#6c757d" font-size="11">Gamepad, Touch &amp; Ball-in-Hand</text>
+
+                        <!-- Bidirectional Arrows: Gameplay Systems <-> EnTT Registry -->
+                        <line x1="154" y1="181" x2="154" y2="211" stroke="#1e30f3" stroke-width="1.8" marker-start="url(#arrowBlue)" marker-end="url(#arrowBlue)" />
+                        <line x1="384" y1="181" x2="384" y2="211" stroke="#1e30f3" stroke-width="1.8" marker-start="url(#arrowBlue)" marker-end="url(#arrowBlue)" />
+                        <line x1="614" y1="181" x2="614" y2="211" stroke="#1e30f3" stroke-width="1.8" marker-start="url(#arrowBlue)" marker-end="url(#arrowBlue)" />
+                        <line x1="844" y1="181" x2="844" y2="211" stroke="#1e30f3" stroke-width="1.8" marker-start="url(#arrowBlue)" marker-end="url(#arrowBlue)" />
+
+                        <!-- TIER 3: CENTRAL ENTT REGISTRY (SINGLE SOURCE OF TRUTH) -->
+                        <rect x="48" y="215" width="902" height="124" rx="14" fill="url(#hubGrad)" />
+                        <text x="499" y="239" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">
+                            entt::registry  (Central Data Hub — Zero Direct System Coupling)
+                        </text>
+
+                        <!-- Components Sub-card -->
+                        <rect x="66" y="252" width="424" height="72" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.22)" />
+                        <text x="278" y="272" text-anchor="middle" fill="#7dd3fc" font-size="12" font-weight="700">Entity Components</text>
+                        <text x="278" y="292" text-anchor="middle" fill="#e9ecef" font-size="11">TransformComponent · PhysicsComponent · RenderComponent</text>
+                        <text x="278" y="309" text-anchor="middle" fill="#ced4da" font-size="11">BallComponent · CueStick · Pocket · Player · PocketedTag</text>
+
+                        <!-- Context Resources Sub-card -->
+                        <rect x="508" y="252" width="424" height="72" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.22)" />
+                        <text x="720" y="272" text-anchor="middle" fill="#f9a8d4" font-size="12" font-weight="700">Shared Context Resources (registry.ctx)</text>
+                        <text x="720" y="292" text-anchor="middle" fill="#e9ecef" font-size="11">GameStateResource (State Machine, Lobby Slots, Teams)</text>
+                        <text x="720" y="309" text-anchor="middle" fill="#ced4da" font-size="11">TurnReport · AudioStateResource · InputBindingsResource</text>
+
+                        <!-- Bidirectional Arrows: EnTT Registry <-> Interface Systems -->
+                        <line x1="154" y1="342" x2="154" y2="372" stroke="#e21e80" stroke-width="1.8" marker-start="url(#arrowAccent)" marker-end="url(#arrowAccent)" />
+                        <line x1="384" y1="342" x2="384" y2="372" stroke="#e21e80" stroke-width="1.8" marker-start="url(#arrowAccent)" marker-end="url(#arrowAccent)" />
+                        <line x1="614" y1="342" x2="614" y2="372" stroke="#e21e80" stroke-width="1.8" marker-start="url(#arrowAccent)" marker-end="url(#arrowAccent)" />
+                        <line x1="844" y1="342" x2="844" y2="372" stroke="#e21e80" stroke-width="1.8" marker-start="url(#arrowAccent)" marker-end="url(#arrowAccent)" />
+
+                        <!-- TIER 4: ENGINE & NETWORK INTERFACE SYSTEMS -->
+                        <!-- PhysicsSystem -->
+                        <rect x="48" y="376" width="212" height="62" rx="10" fill="#ffffff" stroke="#e21e80" stroke-width="2" />
+                        <text x="154" y="401" text-anchor="middle" fill="#c2185b" font-size="14" font-weight="700">PhysicsSystem</text>
+                        <text x="154" y="421" text-anchor="middle" fill="#495057" font-size="11">Step World &amp; Sync Transforms</text>
+
+                        <!-- RenderSystem + UISystem -->
+                        <rect x="278" y="376" width="212" height="62" rx="10" fill="#ffffff" stroke="#e21e80" stroke-width="2" />
+                        <text x="384" y="401" text-anchor="middle" fill="#c2185b" font-size="14" font-weight="700">Render &amp; UISystem</text>
+                        <text x="384" y="421" text-anchor="middle" fill="#495057" font-size="11">3D Models, Aim Ray &amp; Scaled UI</text>
+
+                        <!-- NetworkSystem -->
+                        <rect x="508" y="376" width="212" height="62" rx="10" fill="#ffffff" stroke="#e21e80" stroke-width="2" />
+                        <text x="614" y="401" text-anchor="middle" fill="#c2185b" font-size="14" font-weight="700">NetworkSystem</text>
+                        <text x="614" y="421" text-anchor="middle" fill="#495057" font-size="11">Sanitized Shots &amp; State Sync</text>
+
+                        <!-- SoundSystem -->
+                        <rect x="738" y="376" width="212" height="62" rx="10" fill="#ffffff" stroke="#e21e80" stroke-width="2" />
+                        <text x="844" y="401" text-anchor="middle" fill="#c2185b" font-size="14" font-weight="700">SoundSystem</text>
+                        <text x="844" y="421" text-anchor="middle" fill="#495057" font-size="11">Velocity SFX &amp; BGM Stream</text>
+
+                        <!-- Arrows: Interface Systems <-> External SDKs -->
+                        <line x1="154" y1="438" x2="154" y2="466" stroke="#495057" stroke-width="1.8" marker-start="url(#arrowDark)" marker-end="url(#arrowDark)" />
+                        <line x1="384" y1="438" x2="384" y2="466" stroke="#495057" stroke-width="1.8" marker-start="url(#arrowDark)" marker-end="url(#arrowDark)" />
+                        <line x1="614" y1="438" x2="614" y2="466" stroke="#495057" stroke-width="1.8" marker-start="url(#arrowDark)" marker-end="url(#arrowDark)" />
+                        <line x1="844" y1="438" x2="844" y2="466" stroke="#495057" stroke-width="1.8" marker-start="url(#arrowDark)" marker-end="url(#arrowDark)" />
+
+                        <!-- TIER 5: EXTERNAL SDK BRIDGES & HARDWARE -->
+                        <!-- PhysicsSetup (Jolt) -->
+                        <rect x="48" y="470" width="212" height="114" rx="10" fill="#212529" />
+                        <text x="154" y="495" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">PhysicsSetup (Jolt)</text>
+                        <text x="154" y="517" text-anchor="middle" fill="#adb5bd" font-size="11">LinearCast CCD &amp; BroadPhase</text>
+                        <text x="154" y="534" text-anchor="middle" fill="#adb5bd" font-size="11">Layers: SLATE / SLATEBALLS</text>
+                        <text x="154" y="551" text-anchor="middle" fill="#7dd3fc" font-size="11">PoolContactListener (Mutex)</text>
+                        <text x="154" y="568" text-anchor="middle" fill="#6c757d" font-size="10">ThreadPool / SingleThreaded Web</text>
+
+                        <!-- RenderSetup (Raylib + ImGui) -->
+                        <rect x="278" y="470" width="212" height="114" rx="10" fill="#212529" />
+                        <text x="384" y="495" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">RenderSetup &amp; ImGui</text>
+                        <text x="384" y="517" text-anchor="middle" fill="#adb5bd" font-size="11">Raylib 3D + Custom Lighting</text>
+                        <text x="384" y="534" text-anchor="middle" fill="#adb5bd" font-size="11">GLSL #330 / WebGL ES #100</text>
+                        <text x="384" y="551" text-anchor="middle" fill="#f9a8d4" font-size="11">ImGuiSettingsHandler</text>
+                        <text x="384" y="568" text-anchor="middle" fill="#6c757d" font-size="10">Persists Graphics &amp; Audio (.ini)</text>
+
+                        <!-- NetworkSetup (ENet) -->
+                        <rect x="508" y="470" width="212" height="114" rx="10" fill="#212529" />
+                        <text x="614" y="495" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">NetworkSetup (ENet)</text>
+                        <text x="614" y="517" text-anchor="middle" fill="#adb5bd" font-size="11">Authoritative Host / Client</text>
+                        <text x="614" y="534" text-anchor="middle" fill="#adb5bd" font-size="11">UDP Game Channel (:54321)</text>
+                        <text x="614" y="551" text-anchor="middle" fill="#7dd3fc" font-size="11">LAN Discovery Beacon (:54322)</text>
+                        <text x="614" y="568" text-anchor="middle" fill="#6c757d" font-size="10">Disconnect Rejoin / AI Takeover</text>
+
+                        <!-- Raylib Audio -->
+                        <rect x="738" y="470" width="212" height="114" rx="10" fill="#212529" />
+                        <text x="844" y="495" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">Raylib Audio (raudio)</text>
+                        <text x="844" y="517" text-anchor="middle" fill="#adb5bd" font-size="11">LoadSoundAlias Voice Pools</text>
+                        <text x="844" y="534" text-anchor="middle" fill="#adb5bd" font-size="11">BGM OGG/MP3 Streaming</text>
+                        <text x="844" y="551" text-anchor="middle" fill="#f9a8d4" font-size="11">Impact-Scaled Pitch &amp; Vol</text>
+                        <text x="844" y="568" text-anchor="middle" fill="#6c757d" font-size="10">Procedural Waveform Fallback</text>
+
+                        <!-- Side-Channel Arrow: Jolt Thread-Safe Contact Queue -> LogicSystem -->
+                        <path d="M 48 546 L 18 546 L 18 142 L 42 142"
+                            fill="none" stroke="#e21e80" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowAccent)" />
+                        <text x="13" y="345" transform="rotate(-90 13 345)" text-anchor="middle" fill="#c2185b" font-size="11" font-weight="700">
+                            Mutex Contact Queue (OnContactAdded / Persisted)
+                        </text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section> 
+    <div class="row gx-5 justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            <!-- Section 1: Raylib + Jolt Physics -->
+            <section class="mb-5">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder text-primary mb-3">1. Tying Raylib &amp; Jolt Physics Together</h2>
+                        <p class="text-muted">
+                            Instead of relying on a monolithic engine, <code>PhysicsSetup</code> and <code>RenderSetup</code>
+                            bridge Jolt's rigid-body simulation with Raylib's 3D rendering pipeline. Each ball uses
+                            <code>EMotionQuality::LinearCast</code> for continuous collision detection so high-power break shots never tunnel.
+                        </p>
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded-4 h-100">
+                                    <h5 class="fw-bolder mb-2">Pocket Illusion via Collision Layers</h5>
+                                    <p class="small text-muted mb-0">
+                                        Cutting 6 circular holes into a static triangle mesh often creates snagging edges. Instead,
+                                        I separated the table into <code>STATIC</code> rails and a solid <code>SLATE</code> bed.
+                                        When a ball enters a pocket <code>SENSOR</code>, its layer swaps to <code>SLATEBALLS</code>,
+                                        disabling collisions with the slate so it drops naturally into the pocket.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded-4 h-100">
+                                    <h5 class="fw-bolder mb-2">Solving Physics Edge Cases</h5>
+                                    <p class="small text-muted mb-0">
+                                        Waking a cue ball touching an opponent ball normally fires <code>OnContactAdded</code> even when
+                                        shooting away. By computing relative closing speed (<code>dot(v_rel, n) &gt; 0</code>) in the
+                                        contact listener, fouls only trigger when genuinely striking into a ball. Moving killplane-caught
+                                        balls to <code>SENSOR</code> also prevents trailing balls from waking sleeping pocketed balls.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: EnTT ECS Architecture -->
+            <section class="mb-5">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder text-primary mb-3">2. Loosely Coupled Gameplay with EnTT (ECS)</h2>
+                        <p class="text-muted">
+                            Every game object is composed of lightweight data components (<code>TransformComponent</code>,
+                            <code>PhysicsComponent</code>, <code>RenderComponent</code>, <code>BallComponent</code>,
+                            <code>CueStickComponent</code>), while systems communicate strictly through registry views and
+                            shared context resources (<code>GameStateResource</code>, <code>TurnReport</code>).
+                        </p>
+                        <ul class="text-muted mb-0">
+                            <li class="mb-2">
+                                <strong>Thread-Safe Collision Bridging:</strong> Jolt's multi-threaded contact listener queues
+                                entity pairs under a mutex, which <code>LogicSystem</code> drains on the main thread before
+                                evaluating ball rest states.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Deterministic League Rules:</strong> <code>RulesSystem</code> evaluates pre-shot snapshots
+                                (handling break-shot 8-ball spotting, open-table group choices, scratch ball-in-hand placement,
+                                and Long-String non-overlapping ball respawns).
+                            </li>
+                            <li>
+                                <strong>State-Driven Immediate UI:</strong> <code>UISystem</code> reads <code>GameplayState</code>
+                                and <code>PendingDecision</code> rather than tightly coupling UI callbacks into gameplay systems.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Server-Authoritative LAN Multiplayer -->
+            <section class="mb-5">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder text-primary mb-3">3. Server-Authoritative LAN Multiplayer (ENet)</h2>
+                        <p class="text-muted">
+                            Supports up to 4 players across 2 teams (any mix of local, remote LAN, and AI players)
+                            using a Host-authoritative UDP model built on ENet.
+                        </p>
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded-4 h-100">
+                                    <h5 class="fw-bolder mb-2">Responsive Client + Sanitized Authority</h5>
+                                    <p class="small text-muted mb-0">
+                                        Clients run their aiming and power oscillation locally at 60 FPS so network jitter
+                                        never stutters shot timing, streaming live aim previews to spectators. On release,
+                                        the client sends a shot request that the host validates for turn ownership and clamps
+                                        to legal power bounds before applying the Jolt impulse.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded-4 h-100">
+                                    <h5 class="fw-bolder mb-2">UDP Discovery &amp; Fault Tolerance</h5>
+                                    <p class="small text-muted mb-0">
+                                        Clients automatically discover LAN hosts via a non-blocking UDP broadcast beacon.
+                                        If a client drops mid-match, the host can wait for a reconnect or seamlessly swap
+                                        the slot to an AI bot; if a host disconnects, clients are given a retry or exit flow.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Ghost-Ball AI & Multi-Device Input -->
+            <section class="mb-5">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder text-primary mb-3">4. Ghost-Ball Geometry AI &amp; Multi-Device Input</h2>
+                        <p class="text-muted mb-3">
+                            <code>AISystem</code> plays using the same rules and cue-stick state machine as human players—making
+                            it easy to drop AI bots into single-player, local co-op, or LAN lobbies.
+                        </p>
+                        <ul class="text-muted mb-0">
+                            <li class="mb-2">
+                                <strong>Ghost-Ball Shot Solver:</strong> Computes the ideal impact point <code>2R</code> behind each
+                                legal object ball along each pocket vector, scores cut-angle cosine and path clearance against
+                                blocking balls, and injects difficulty-tuned angular/power variance for Easy, Medium, and Hard bots.
+                            </li>
+                            <li>
+                                <strong>Remappable Multi-Input:</strong> <code>InputSystem</code> unifies mouse, remappable keyboard
+                                bindings, dual-stick gamepads, and touchscreen gestures (drag-to-aim, pinch-to-zoom), with
+                                Jolt narrowphase raycasting for Ball-in-Hand surface placement and overlap validation.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Cross-Platform Delivery & Custom Tooling -->
+            <section class="mb-5">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body p-5">
+                        <h2 class="fw-bolder text-primary mb-3">5. Cross-Platform Builds, Shaders &amp; Tooling</h2>
+                        <p class="text-muted mb-3">
+                            Leveraging my background in Systems &amp; DevOps engineering, the project was architected to build
+                            cleanly across Linux, Windows, and WebAssembly (itch.io) from a single codebase.
+                        </p>
+                        <ul class="text-muted mb-0">
+                            <li class="mb-2">
+                                <strong>WebAssembly &amp; WebGL ES Port:</strong> Refactored the frame loop for Emscripten's
+                                <code>requestAnimationFrame</code> callback, switched Jolt to <code>JobSystemSingleThreaded</code>,
+                                and authored WebGL-compatible <code>#version 100</code> GLSL lighting shaders alongside desktop shaders.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Resolution-Independent UI &amp; Persistence:</strong> Built an automatic UI scaler
+                                (720p through 4K) and hooked into Dear ImGui's <code>ImGuiSettingsHandler</code> so graphics and
+                                audio preferences persist cleanly inside <code>imgui.ini</code>.
+                            </li>
+                            <li>
+                                <strong>Voice-Pooled Audio with Fallbacks:</strong> <code>SoundSystem</code> scales ball-clack and
+                                rail-thud volume/pitch by Jolt collision velocity using Raylib <code>LoadSoundAlias</code> pools,
+                                with procedural waveform generation as an automatic fallback.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="mb-5">
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-light border-0 px-4 px-md-5 pt-4 pb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <span class="badge bg-primary me-2">C++20</span>
+                        <span class="fw-bolder text-dark">Core Frame Loop &amp; Cross-Platform Entry</span>
+                    </div>
+                    <code class="text-muted small">BilliardsGame.cpp</code>
+                </div>
+                <div class="card-body p-4 p-md-5 pt-3">
+                    <p class="text-muted small mb-3">
+                        The entire game loop reads like a high-level pipeline: networking ticks every frame, authoritative
+                        simulation systems run on the host/local machine, and the same <code>UpdateDrawFrame()</code> drives
+                        both desktop and WebAssembly builds.
+                    </p>
+                    <pre class="bg-dark text-light p-4 rounded-4 mb-0 overflow-auto" style="font-size: 0.85rem; line-height: 1.5;"><code>void BilliardsGame::UpdateDrawFrame()
+{
+    if (IsWindowResized()) render-&gt;Resize();
+    float dt = std::min(GetFrameTime(), 0.016f);
+
+    auto&amp; game = registry.ctx().get&lt;GameStateResource&gt;();
+    const auto&amp; binds = registry.ctx().get&lt;InputBindingsResource&gt;();
+
+    // Poll ENet lobby, live aim streams, and authoritative table sync
+    sysNetwork-&gt;Update(registry, network.get(), physics.get());
+
+    if (!game.isGamePaused &amp;&amp; game.currentGameState != GameplayState::MENU &amp;&amp; game.disconnectedSlotIndex &lt; 0)
+    {
+        // Only Host or Local/Single-Player runs authoritative rules &amp; AI
+        if (network-&gt;GetRole() != NetworkRole::CLIENT)
+        {
+            sysLogic-&gt;Update(registry, physics.get());
+            sysRules-&gt;Update(registry, physics.get());
+            sysAI-&gt;Update(registry, physics-&gt;GetSystem());
+        }
+
+        sysInput-&gt;Update(registry, physics-&gt;GetSystem(), render-&gt;GetCamera(), network-&gt;GetLocalPeerID());
+        sysPhysics-&gt;Update(registry, physics.get(), dt);
+    }
+
+    sysSound-&gt;Update(registry);
+
+    render-&gt;Begin();
+        sysRender-&gt;Render(registry, physics-&gt;GetSystem());
+        if (IsKeyDown(binds.keyDebugPhysics)) sysPhysics-&gt;DebugDraw(registry, physics-&gt;GetSystem());
+    render-&gt;End();
+
+    sysUI-&gt;Update(registry, physics.get(), network.get(), sysNetwork.get());
+    render-&gt;FinalizeFrame();
+}
+
+void BilliardsGame::Run()
+{
+#if defined(__EMSCRIPTEN__)
+    emscripten_set_main_loop_arg(
+        [](void* arg) { static_cast&lt;BilliardsGame*&gt;(arg)-&gt;UpdateDrawFrame(); },
+        this, 0, 1
+    );
+#else
+    while (!WindowShouldClose()) UpdateDrawFrame();
+#endif
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+            <section class="mb-5">
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-light border-0 px-4 px-md-5 pt-4 pb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <span class="badge bg-primary me-2">EnTT ECS</span>
+                        <span class="fw-bolder text-dark">Decoupled Queries via Views &amp; Context Resources</span>
+                    </div>
+                    <code class="text-muted small">LogicSystem.cpp</code>
+                </div>
+                <div class="card-body p-4 p-md-5 pt-3">
+                    <p class="text-muted small mb-3">
+                        Systems share state through <code>registry.ctx()</code> and operate on entities matching component views.
+                        Here, <code>LogicSystem</code> swaps pocketed balls onto the <code>SLATEBALLS</code> layer, updates
+                        <code>TurnReport</code>, and dispatches velocity-scaled audio events without holding a pointer to
+                        <code>SoundSystem</code> or <code>RulesSystem</code>.
+                    </p>
+            <pre class="bg-dark text-light p-4 rounded-4 mb-0 overflow-auto" style="font-size: 0.85rem; line-height: 1.5;"><code>// Shared state accessed from registry.ctx() — no cross-system pointers needed
+auto&amp; game   = registry.ctx().get&lt;GameStateResource&gt;();
+auto&amp; report = registry.ctx().get&lt;TurnReport&gt;();
+auto&amp; audio  = registry.ctx().get&lt;AudioStateResource&gt;();
+
+// 1. Ball vs. Pocket Sensor: drop ball through the slate &amp; notify audio
+if (registry.all_of&lt;PocketComponent&gt;(sensor) &amp;&amp; !registry.all_of&lt;PocketedTag&gt;(ball))
+{
+    auto&amp; ballComp = registry.get&lt;BallComponent&gt;(ball);
+    auto&amp; ballPhys = registry.get&lt;PhysicsComponent&gt;(ball);
+
+    ballComp.sunkInPocket = registry.get&lt;PocketComponent&gt;(sensor).pocket;
+    if (ballComp.group == BallGroup::CUE) report.cueBallSunk = true;
+    else report.ballsPocketed.push_back(ball);
+
+    // Swap collision layer so the ball falls through the solid slate bed
+    bi.SetObjectLayer(ballPhys.bodyID, Layers::SLATEBALLS);
+    bi.ActivateBody(ballPhys.bodyID);
+    registry.emplace&lt;PocketedTag&gt;(ball);
+
+    audio.PlaySFX(SoundEffectType::POCKET_DROP, 1.0f);
+}
+
+// 2. View query: advance state machine once all active balls come to rest
+bool anyMoving = false;
+auto view = registry.view&lt;PhysicsComponent, BallComponent, TransformComponent&gt;();
+for (auto entity : view)
+{
+    if (bi.IsActive(view.get&lt;PhysicsComponent&gt;(entity).bodyID))
+    {
+        anyMoving = true;
+        break;
+    }
+}
+if (!anyMoving) game.currentGameState = GameplayState::EVALUATING;</code></pre>
+                </div>
+            </div>
+        </section>
+        <section class="mb-5">
+        <div class="card shadow border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-light border-0 px-4 px-md-5 pt-4 pb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <span class="badge bg-primary me-2">ENet UDP</span>
+                    <span class="fw-bolder text-dark">Packed Binary Packets &amp; Sanitized Host Authority</span>
+                </div>
+                <code class="text-muted small">NetworkSystem.cpp</code>
+            </div>
+            <div class="card-body p-4 p-md-5 pt-3">
+                <p class="text-muted small mb-3">
+                    Compact, byte-packed UDP packets minimize bandwidth. Clients charge shots locally for smooth 60 FPS feel,
+                    while the host verifies turn ownership (<code>isCurrentShooter</code>) and sanitizes incoming values
+                    before applying impulses to the authoritative Jolt simulation.
+                </p>
+                <pre class="bg-dark text-light p-4 rounded-4 mb-0 overflow-auto" style="font-size: 0.85rem; line-height: 1.5;"><code>#pragma pack(push, 1)
+struct PktShotRequest { uint8_t type = PKT_SHOT_REQUEST; float rotation; float power; };
+struct PktLiveAim     { uint8_t type = PKT_LIVE_AIM; float cueRotation; float cuePower; bool isCharging; float bihX, bihZ; };
+struct PktTableSync
+{
+    uint8_t type = PKT_TABLE_SYNC;
+    GameplayState gameState;
+    PendingDecision pendingDecision;
+    uint8_t activePlayerIdx;
+    bool isTableOpen, isBreakShot, restrictToKitchen;
+    PocketLocation calledPocket;
+    float cueRotation, cuePower, bihX, bihZ;
+    BallGroup playerGroups[4];
+    uint8_t sunkCount, sunkBalls[16];
+    BallNetState balls[16];
+};
+#pragma pack(pop)
+
+void NetworkSystem::ExecuteSanitizedServerShot(entt::registry&amp; registry, PhysicsSetup* physSetup, float rotation, float rawPower)
+{
+    auto&amp; game = registry.ctx().get&lt;GameStateResource&gt;();
+    if (game.currentGameState != GameplayState::AIMING &amp;&amp; game.currentGameState != GameplayState::SHOOTING) return;
+
+    // Sanitize client inputs to prevent NaN injection or spoofed shot power
+    if (!std::isfinite(rotation)) rotation = 0.0f;
+    if (!std::isfinite(rawPower)) rawPower = 0.05f;
+    float cleanPower = std::clamp(rawPower, 0.05f, 1.0f);
+
+    // Apply validated impulse to the cue ball on the authoritative host
+    Vector3 dir = { -std::cos(rotation), 0.0f, -std::sin(rotation) };
+    JPH::Vec3 impulse(dir.x * cleanPower * 100.0f, 0.0f, dir.z * cleanPower * 100.0f);
+
+    auto&amp; bi = physSetup-&gt;GetSystem()-&gt;GetBodyInterface();
+    bi.SetObjectLayer(cueBallBodyID, Layers::BALLS);
+    bi.ActivateBody(cueBallBodyID);
+    bi.AddImpulse(cueBallBodyID, impulse);
+
+    game.currentGameState = GameplayState::RESOLVING;
+}</code></pre>
+                </div>
+            </div>
+        </section>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+{% endblock %}
